@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لافالي — إنشاء بوليصة</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 16px;
+  }
+  .logo { font-size: 28px; font-weight: 300; letter-spacing: 8px; color: #c9a96e; margin-bottom: 6px; }
+  .subtitle { font-size: 12px; color: #666; letter-spacing: 3px; margin-bottom: 40px; }
+  .card {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .card h2 { font-size: 14px; color: #c9a96e; letter-spacing: 2px; margin-bottom: 24px; font-weight: 400; }
+  .field { margin-bottom: 18px; }
+  label { display: block; font-size: 11px; color: #888; margin-bottom: 6px; letter-spacing: 1px; }
+  input, select {
+    width: 100%;
+    background: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s;
+    font-family: inherit;
+  }
+  input:focus, select:focus { border-color: #c9a96e; }
+  input::placeholder { color: #444; }
+  select option { background: #1e1e1e; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn {
+    width: 100%;
+    background: linear-gradient(135deg, #c9a96e, #a07840);
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    letter-spacing: 1px;
+    transition: opacity 0.2s;
+  }
+  .btn:hover { opacity: 0.9; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .result { margin-top: 24px; padding: 20px; border-radius: 12px; display: none; }
+  .result.success { background: #0d2818; border: 1px solid #1a5c35; display: block; }
+  .result.error { background: #2a0d0d; border: 1px solid #5c1a1a; display: block; }
+  .result-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; letter-spacing: 1px; }
+  .success .result-title { color: #4caf50; }
+  .error .result-title { color: #f44336; }
+  .shipment-id { font-size: 22px; font-weight: 700; color: #c9a96e; margin-bottom: 16px; letter-spacing: 2px; }
+  .print-btn {
+    display: inline-block;
+    background: #c9a96e;
+    color: #000;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .history { margin-top: 32px; width: 100%; max-width: 480px; }
+  .history h3 { font-size: 12px; color: #666; letter-spacing: 2px; margin-bottom: 12px; }
+  .history-item {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .history-item .id { color: #c9a96e; font-size: 13px; font-weight: 600; }
+  .history-item .name { color: #aaa; font-size: 12px; margin-top: 2px; }
+  .history-item a { color: #c9a96e; font-size: 11px; text-decoration: none; border: 1px solid #c9a96e; padding: 4px 10px; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<div class="logo">LAVALLEE</div>
+<div class="subtitle">نظام إنشاء البوالص</div>
+
+<div class="card">
+  <h2>بيانات الشحنة</h2>
+
+  <div class="field">
+    <label>اسم المستلم *</label>
+    <input id="name" type="text" placeholder="الاسم الكامل">
+  </div>
+
+  <div class="field">
+    <label>رقم الجوال *</label>
+    <input id="phone" type="tel" placeholder="05xxxxxxxx">
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label>المدينة *</label>
+      <select id="city">
+        <option value="Jeddah">جدة</option>
+        <option value="Riyadh">الرياض</option>
+        <option value="Makkah">مكة المكرمة</option>
+        <option value="Madinah">المدينة المنورة</option>
+        <option value="Dammam">الدمام</option>
+        <option value="Khobar">الخبر</option>
+        <option value="Taif">الطائف</option>
+        <option value="Abha">أبها</option>
+        <option value="Tabuk">تبوك</option>
+        <option value="Buraidah">بريدة</option>
+        <option value="Hail">حائل</option>
+        <option value="Jazan">جازان</option>
+        <option value="Najran">نجران</option>
+        <option value="Yanbu">ينبع</option>
+        <option value="Arar">عرعر</option>
+        <option value="Qatif">القطيف</option>
+        <option value="Al Ahsa">الأحساء</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>الوزن (كيلو)</label>
+      <input id="weight" type="number" placeholder="1" value="1" min="0.1" step="0.1">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>العنوان *</label>
+    <input id="address" type="text" placeholder="الحي، الشارع، رقم المبنى">
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label>رقم الطلب</label>
+      <input id="ref" type="text" placeholder="اختياري">
+    </div>
+    <div class="field">
+      <label>مبلغ COD (ريال)</label>
+      <input id="cod" type="number" placeholder="0" value="0" min="0">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>وصف المنتج</label>
+    <input id="desc" type="text" placeholder="مثال: فستان كريب أسود">
+  </div>
+
+  <button class="btn" id="submitBtn" onclick="createShipment()">إنشاء البوليصة</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<div class="history" id="historySection" style="display:none">
+  <h3>آخر البوالص — هذه الجلسة</h3>
+  <div id="historyList"></div>
+</div>
+
+<script>
+  // ← ضع رابط سيرفر Render هنا
+  const SERVER_URL = "https://YOUR-SERVER.onrender.com";
+
+  const history = [];
+
+  async function createShipment() {
+    const btn = document.getElementById('submitBtn');
+    const resultDiv = document.getElementById('result');
+
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const city = document.getElementById('city').value;
+    const address = document.getElementById('address').value.trim();
+    const weight = parseFloat(document.getElementById('weight').value) || 1;
+    const ref = document.getElementById('ref').value.trim();
+    const cod = parseFloat(document.getElementById('cod').value) || 0;
+    const desc = document.getElementById('desc').value.trim();
+
+    if (!name || !phone || !address) {
+      resultDiv.className = 'result error';
+      resultDiv.innerHTML = '<div class="result-title">⚠️ يرجى تعبئة الحقول المطلوبة</div>';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = 'جاري الإنشاء <span class="spinner"></span>';
+    resultDiv.className = 'result';
+    resultDiv.innerHTML = '';
+
+    try {
+      const response = await fetch(`${SERVER_URL}/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipientName: name, recipientPhone: phone,
+          recipientCity: city, recipientAddress: address,
+          weight, orderRef: ref, description: desc, codAmount: cod
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        resultDiv.className = 'result success';
+        resultDiv.innerHTML = `
+          <div class="result-title">✅ تم إنشاء البوليصة</div>
+          <div class="shipment-id">${data.id}</div>
+          <a href="${data.label}" target="_blank" class="print-btn">🖨️ طباعة البوليصة</a>
+        `;
+        history.unshift({ id: data.id, name, label: data.label });
+        renderHistory();
+        document.getElementById('name').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('address').value = '';
+        document.getElementById('ref').value = '';
+        document.getElementById('cod').value = '0';
+        document.getElementById('desc').value = '';
+      } else {
+        resultDiv.className = 'result error';
+        resultDiv.innerHTML = `<div class="result-title">❌ خطأ في الإنشاء</div><div style="font-size:12px;color:#aaa;margin-top:8px">${JSON.stringify(data.error)}</div>`;
+      }
+    } catch (e) {
+      resultDiv.className = 'result error';
+      resultDiv.innerHTML = `<div class="result-title">❌ تعذر الاتصال بالسيرفر</div><div style="font-size:11px;color:#666;margin-top:6px">تأكد من اتصال الإنترنت</div>`;
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = 'إنشاء البوليصة';
+  }
+
+  function renderHistory() {
+    const section = document.getElementById('historySection');
+    const list = document.getElementById('historyList');
+    if (history.length === 0) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    list.innerHTML = history.map(h => `
+      <div class="history-item">
+        <div>
+          <div class="id">${h.id}</div>
+          <div class="name">${h.name}</div>
+        </div>
+        <a href="${h.label}" target="_blank">طباعة</a>
+      </div>
+    `).join('');
+  }
+</script>
+</body>
+</html>
