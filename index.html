@@ -3,274 +3,621 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لافالي — إنشاء بوليصة</title>
+<title>LAVALLEE — نظام الشحن</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: #0a0a0a;
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 16px;
-  }
-  .logo { font-size: 28px; font-weight: 300; letter-spacing: 8px; color: #c9a96e; margin-bottom: 6px; }
-  .subtitle { font-size: 12px; color: #666; letter-spacing: 3px; margin-bottom: 40px; }
-  .card {
-    background: #141414;
-    border: 1px solid #2a2a2a;
-    border-radius: 16px;
-    padding: 32px;
-    width: 100%;
-    max-width: 480px;
-  }
-  .card h2 { font-size: 14px; color: #c9a96e; letter-spacing: 2px; margin-bottom: 24px; font-weight: 400; }
-  .field { margin-bottom: 18px; }
-  label { display: block; font-size: 11px; color: #888; margin-bottom: 6px; letter-spacing: 1px; }
-  input, select {
-    width: 100%;
-    background: #1e1e1e;
-    border: 1px solid #2a2a2a;
-    border-radius: 8px;
-    padding: 12px 14px;
-    color: #fff;
-    font-size: 14px;
-    outline: none;
-    transition: border 0.2s;
-    font-family: inherit;
-  }
-  input:focus, select:focus { border-color: #c9a96e; }
-  input::placeholder { color: #444; }
-  select option { background: #1e1e1e; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .btn {
-    width: 100%;
-    background: linear-gradient(135deg, #c9a96e, #a07840);
-    border: none;
-    border-radius: 8px;
-    padding: 14px;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 8px;
-    letter-spacing: 1px;
-    transition: opacity 0.2s;
-  }
-  .btn:hover { opacity: 0.9; }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .result { margin-top: 24px; padding: 20px; border-radius: 12px; display: none; }
-  .result.success { background: #0d2818; border: 1px solid #1a5c35; display: block; }
-  .result.error { background: #2a0d0d; border: 1px solid #5c1a1a; display: block; }
-  .result-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; letter-spacing: 1px; }
-  .success .result-title { color: #4caf50; }
-  .error .result-title { color: #f44336; }
-  .shipment-id { font-size: 22px; font-weight: 700; color: #c9a96e; margin-bottom: 16px; letter-spacing: 2px; }
-  .print-btn {
-    display: inline-block;
-    background: #c9a96e;
-    color: #000;
-    padding: 10px 24px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-  .spinner {
-    display: inline-block;
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    vertical-align: middle;
-    margin-left: 8px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .history { margin-top: 32px; width: 100%; max-width: 480px; }
-  .history h3 { font-size: 12px; color: #666; letter-spacing: 2px; margin-bottom: 12px; }
-  .history-item {
-    background: #141414;
-    border: 1px solid #2a2a2a;
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .history-item .id { color: #c9a96e; font-size: 13px; font-weight: 600; }
-  .history-item .name { color: #aaa; font-size: 12px; margin-top: 2px; }
-  .history-item a { color: #c9a96e; font-size: 11px; text-decoration: none; border: 1px solid #c9a96e; padding: 4px 10px; border-radius: 6px; }
+:root {
+  --gold: #b8965a;
+  --gold-light: #d4b07a;
+  --gold-dark: #8a6935;
+  --gold-pale: #f5ede0;
+  --bg: #f8f6f2;
+  --bg2: #f0ece4;
+  --white: #ffffff;
+  --text: #1a1a1a;
+  --text-muted: #8a8078;
+  --text-light: #b5afa6;
+  --border: #e8e2d8;
+  --border-focus: #b8965a;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.10);
+  --shadow-lg: 0 24px 64px rgba(0,0,0,0.13);
+  --success: #2d6a4f;
+  --success-bg: #f0faf5;
+  --success-border: #b7e4c7;
+  --error: #9b2226;
+  --error-bg: #fff5f5;
+  --error-border: #f5c2c2;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 52px 20px 80px;
+}
+.header {
+  text-align: center;
+  margin-bottom: 44px;
+  animation: fadeUp 0.7s ease forwards;
+}
+.brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 300;
+  letter-spacing: 16px;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.brand span { color: var(--gold); }
+.brand-sub {
+  font-size: 10px;
+  color: var(--text-light);
+  letter-spacing: 5px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+.header-line {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 18px 0 10px;
+}
+.header-line::before, .header-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+}
+.header-diamond {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.7s ease 0.15s both;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
+}
+.card::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(160deg, rgba(184,150,90,0.025) 0%, transparent 40%);
+  pointer-events: none;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.section-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 28px 0;
+  position: relative;
+}
+.section-sep-label {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--white);
+  padding: 0 12px 0 0;
+  font-size: 9px;
+  color: var(--text-light);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.field { margin-bottom: 20px; position: relative; }
+.field label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  margin-bottom: 7px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.field label .req { color: var(--gold); font-size: 13px; line-height: 1; }
+input, select {
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: 'Tajawal', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input:focus, select:focus {
+  border-color: var(--border-focus);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(184,150,90,0.12);
+}
+input::placeholder { color: var(--text-light); font-size: 13px; }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%23b5afa6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 14px center;
+  padding-left: 36px;
+  cursor: pointer;
+}
+select option { background: #fff; color: var(--text); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.cod-field input {
+  border-color: rgba(184,150,90,0.3);
+  background: linear-gradient(135deg, #fffdf9, var(--bg));
+}
+.cod-field input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184,150,90,0.15);
+}
+.btn-wrap { margin-top: 8px; }
+.btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-light) 100%);
+  background-size: 200% 100%;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 16px 24px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(138,105,53,0.3);
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s;
+}
+.btn:hover:not(:disabled)::after { left: 100%; }
+.btn:hover:not(:disabled) {
+  box-shadow: 0 6px 28px rgba(138,105,53,0.4);
+  transform: translateY(-1px);
+}
+.btn:active:not(:disabled) { transform: translateY(0); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-inner { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.result { margin-top: 24px; border-radius: var(--radius-sm); display: none; overflow: hidden; }
+.result.show { display: block; animation: fadeUp 0.4s ease forwards; }
+.result-inner { padding: 24px; }
+.result.success .result-inner {
+  background: var(--success-bg);
+  border: 1.5px solid var(--success-border);
+  border-radius: var(--radius-sm);
+}
+.result.error .result-inner {
+  background: var(--error-bg);
+  border: 1.5px solid var(--error-border);
+  border-radius: var(--radius-sm);
+}
+.result-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+.success .result-label { color: var(--success); }
+.error .result-label { color: var(--error); }
+.shipment-id {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 4px;
+  margin-bottom: 4px;
+  line-height: 1.1;
+}
+.shipment-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 18px; letter-spacing: 1px; }
+.print-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--text);
+  color: #fff;
+  padding: 11px 24px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.print-link:hover { background: var(--gold-dark); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.error-detail { font-size: 12px; color: var(--error); line-height: 1.6; }
+.history-section { margin-top: 32px; animation: fadeUp 0.6s ease 0.3s both; display: none; }
+.history-section.show { display: block; }
+.history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.history-title { font-size: 10px; color: var(--text-light); letter-spacing: 3px; text-transform: uppercase; font-weight: 500; }
+.history-badge {
+  background: var(--gold-pale);
+  color: var(--gold-dark);
+  font-size: 10px;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-weight: 600;
+  border: 1px solid rgba(184,150,90,0.2);
+}
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.history-item:hover { border-color: var(--gold-light); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.h-id { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--text); letter-spacing: 2px; font-weight: 500; line-height: 1.2; }
+.h-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.h-time { font-size: 10px; color: var(--text-light); margin-top: 1px; }
+.h-print {
+  color: var(--gold-dark);
+  font-size: 10px;
+  text-decoration: none;
+  border: 1.5px solid var(--border);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.h-print:hover { border-color: var(--gold); background: var(--gold-pale); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.footer { margin-top: 48px; text-align: center; animation: fadeUp 0.6s ease 0.4s both; }
+.footer-text { font-size: 9px; color: var(--text-light); letter-spacing: 3px; text-transform: uppercase; }
+input.invalid { border-color: var(--error-border) !important; background: var(--error-bg) !important; }
+@media (max-width: 500px) {
+  .page { padding: 32px 14px 60px; }
+  .card { padding: 28px 20px; }
+  .brand { font-size: 32px; letter-spacing: 10px; }
+  .row, .row3 { grid-template-columns: 1fr; gap: 0; }
+  .shipment-id { font-size: 26px; }
+}
 </style>
 </head>
 <body>
-
-<div class="logo">LAVALLEE</div>
-<div class="subtitle">نظام إنشاء البوالص</div>
-
-<div class="card">
-  <h2>بيانات الشحنة</h2>
-
-  <div class="field">
-    <label>اسم المستلم *</label>
-    <input id="name" type="text" placeholder="الاسم الكامل">
+<canvas id="bg-canvas"></canvas>
+<div class="page">
+  <div class="header">
+    <div class="brand">L<span>A</span>VALLEE</div>
+    <div class="brand-sub">نظام إنشاء بوالص الشحن</div>
+    <div class="header-line"><div class="header-diamond"></div></div>
   </div>
-
-  <div class="field">
-    <label>رقم الجوال *</label>
-    <input id="phone" type="tel" placeholder="05xxxxxxxx">
-  </div>
-
-  <div class="row">
+  <div class="card">
+    <div class="section-title">بيانات المستلم</div>
     <div class="field">
-      <label>المدينة *</label>
-      <select id="city">
-        <option value="Jeddah">جدة</option>
-        <option value="Riyadh">الرياض</option>
-        <option value="Makkah">مكة المكرمة</option>
-        <option value="Madinah">المدينة المنورة</option>
-        <option value="Dammam">الدمام</option>
-        <option value="Khobar">الخبر</option>
-        <option value="Taif">الطائف</option>
-        <option value="Abha">أبها</option>
-        <option value="Tabuk">تبوك</option>
-        <option value="Buraidah">بريدة</option>
-        <option value="Hail">حائل</option>
-        <option value="Jazan">جازان</option>
-        <option value="Najran">نجران</option>
-        <option value="Yanbu">ينبع</option>
-        <option value="Arar">عرعر</option>
-        <option value="Qatif">القطيف</option>
-        <option value="Al Ahsa">الأحساء</option>
-      </select>
+      <label><span class="req">*</span> اسم المستلم</label>
+      <input id="name" type="text" placeholder="الاسم الكامل" autocomplete="off">
     </div>
-    <div class="field">
-      <label>الوزن (كيلو)</label>
-      <input id="weight" type="number" placeholder="1" value="1" min="0.1" step="0.1">
-    </div>
-  </div>
-
-  <div class="field">
-    <label>العنوان *</label>
-    <input id="address" type="text" placeholder="الحي، الشارع، رقم المبنى">
-  </div>
-
-  <div class="row">
-    <div class="field">
-      <label>رقم الطلب</label>
-      <input id="ref" type="text" placeholder="اختياري">
-    </div>
-    <div class="field">
-      <label>مبلغ COD (ريال)</label>
-      <input id="cod" type="number" placeholder="0" value="0" min="0">
-    </div>
-  </div>
-
-  <div class="field">
-    <label>وصف المنتج</label>
-    <input id="desc" type="text" placeholder="مثال: فستان كريب أسود">
-  </div>
-
-  <button class="btn" id="submitBtn" onclick="createShipment()">إنشاء البوليصة</button>
-
-  <div class="result" id="result"></div>
-</div>
-
-<div class="history" id="historySection" style="display:none">
-  <h3>آخر البوالص — هذه الجلسة</h3>
-  <div id="historyList"></div>
-</div>
-
-<script>
-  // ← ضع رابط سيرفر Render هنا
-  const SERVER_URL = "https://aramex-mcp.onrender.com";
-
-  const history = [];
-
-  async function createShipment() {
-    const btn = document.getElementById('submitBtn');
-    const resultDiv = document.getElementById('result');
-
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const city = document.getElementById('city').value;
-    const address = document.getElementById('address').value.trim();
-    const weight = parseFloat(document.getElementById('weight').value) || 1;
-    const ref = document.getElementById('ref').value.trim();
-    const cod = parseFloat(document.getElementById('cod').value) || 0;
-    const desc = document.getElementById('desc').value.trim();
-
-    if (!name || !phone || !address) {
-      resultDiv.className = 'result error';
-      resultDiv.innerHTML = '<div class="result-title">⚠️ يرجى تعبئة الحقول المطلوبة</div>';
-      return;
-    }
-
-    btn.disabled = true;
-    btn.innerHTML = 'جاري الإنشاء <span class="spinner"></span>';
-    resultDiv.className = 'result';
-    resultDiv.innerHTML = '';
-
-    try {
-      const response = await fetch(`${SERVER_URL}/create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          recipientName: name, recipientPhone: phone,
-          recipientCity: city, recipientAddress: address,
-          weight, orderRef: ref, description: desc, codAmount: cod
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        resultDiv.className = 'result success';
-        resultDiv.innerHTML = `
-          <div class="result-title">✅ تم إنشاء البوليصة</div>
-          <div class="shipment-id">${data.id}</div>
-          <a href="${data.label}" target="_blank" class="print-btn">🖨️ طباعة البوليصة</a>
-        `;
-        history.unshift({ id: data.id, name, label: data.label });
-        renderHistory();
-        document.getElementById('name').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('address').value = '';
-        document.getElementById('ref').value = '';
-        document.getElementById('cod').value = '0';
-        document.getElementById('desc').value = '';
-      } else {
-        resultDiv.className = 'result error';
-        resultDiv.innerHTML = `<div class="result-title">❌ خطأ في الإنشاء</div><div style="font-size:12px;color:#aaa;margin-top:8px">${JSON.stringify(data.error)}</div>`;
-      }
-    } catch (e) {
-      resultDiv.className = 'result error';
-      resultDiv.innerHTML = `<div class="result-title">❌ تعذر الاتصال بالسيرفر</div><div style="font-size:11px;color:#666;margin-top:6px">تأكد من اتصال الإنترنت</div>`;
-    }
-
-    btn.disabled = false;
-    btn.innerHTML = 'إنشاء البوليصة';
-  }
-
-  function renderHistory() {
-    const section = document.getElementById('historySection');
-    const list = document.getElementById('historyList');
-    if (history.length === 0) { section.style.display = 'none'; return; }
-    section.style.display = 'block';
-    list.innerHTML = history.map(h => `
-      <div class="history-item">
-        <div>
-          <div class="id">${h.id}</div>
-          <div class="name">${h.name}</div>
-        </div>
-        <a href="${h.label}" target="_blank">طباعة</a>
+    <div class="row">
+      <div class="field">
+        <label><span class="req">*</span> رقم الجوال</label>
+        <input id="phone" type="tel" placeholder="05xxxxxxxx" inputmode="tel">
       </div>
-    `).join('');
+      <div class="field">
+        <label><span class="req">*</span> المدينة</label>
+        <select id="city">
+          <option value="Jeddah">جدة</option>
+          <option value="Riyadh">الرياض</option>
+          <option value="Makkah">مكة المكرمة</option>
+          <option value="Madinah">المدينة المنورة</option>
+          <option value="Dammam">الدمام</option>
+          <option value="Khobar">الخبر</option>
+          <option value="Taif">الطائف</option>
+          <option value="Abha">أبها</option>
+          <option value="Tabuk">تبوك</option>
+          <option value="Buraidah">بريدة</option>
+          <option value="Hail">حائل</option>
+          <option value="Jazan">جازان</option>
+          <option value="Najran">نجران</option>
+          <option value="Yanbu">ينبع</option>
+          <option value="Arar">عرعر</option>
+          <option value="Qatif">القطيف</option>
+          <option value="Al Ahsa">الأحساء</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> العنوان التفصيلي</label>
+      <input id="address" type="text" placeholder="الحي، الشارع، رقم المبنى">
+    </div>
+    <div class="field">
+      <label>الرمز القصير للعنوان</label>
+      <input id="shortAddr" type="text" placeholder="مثال: MOMB4669 (اختياري)">
+    </div>
+    <div class="section-sep">
+      <span class="section-sep-label">تفاصيل الشحنة</span>
+    </div>
+    <div class="row3">
+      <div class="field">
+        <label>الوزن كجم</label>
+        <input id="weight" type="number" placeholder="1.0" value="1" min="0.1" step="0.1" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label>رقم الطلب</label>
+        <input id="ref" type="text" placeholder="اختياري">
+      </div>
+      <div class="field cod-field">
+        <label>COD ريال</label>
+        <input id="cod" type="number" placeholder="0" value="0" min="0" inputmode="decimal">
+      </div>
+    </div>
+    <div class="field">
+      <label>وصف المحتويات</label>
+      <input id="desc" type="text" placeholder="مثال: فستان كريب ميدي أسود">
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" id="submitBtn" onclick="createShipment()">
+        <span class="btn-inner" id="btnText">إنشاء البوليصة</span>
+      </button>
+    </div>
+    <div class="result" id="result">
+      <div class="result-inner" id="resultInner"></div>
+    </div>
+  </div>
+  <div class="history-section" id="historySection">
+    <div class="history-header">
+      <div class="history-title">سجل هذه الجلسة</div>
+      <div class="history-badge" id="historyCount">0</div>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+  <div class="footer">
+    <div class="footer-text">LAVALLEE — Powered by Aramex API</div>
+  </div>
+</div>
+<script>
+const SERVER_URL = "https://aramex-mcp.onrender.com";
+const shipHistory = [];
+function now() {
+  const d = new Date();
+  return d.getHours().toString().padStart(2,"0") + ":" + d.getMinutes().toString().padStart(2,"0");
+}
+function formatPhone(phone) {
+  const p = phone.replace(/\s/g,"");
+  if (p.startsWith("05")) return "966" + p.slice(1);
+  if (p.startsWith("+966")) return p.slice(1);
+  return p;
+}
+async function createShipment() {
+  const btn = document.getElementById("submitBtn");
+  const btnText = document.getElementById("btnText");
+  const result = document.getElementById("result");
+  const resultInner = document.getElementById("resultInner");
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const city = document.getElementById("city").value;
+  const address = document.getElementById("address").value.trim();
+  const shortAddr = document.getElementById("shortAddr").value.trim();
+  const weight = parseFloat(document.getElementById("weight").value) || 1;
+  const ref = document.getElementById("ref").value.trim();
+  const cod = parseFloat(document.getElementById("cod").value) || 0;
+  const desc = document.getElementById("desc").value.trim();
+  let valid = true;
+  ["name","phone","address"].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) { el.classList.add("invalid"); valid = false; }
+    else el.classList.remove("invalid");
+  });
+  if (!valid) {
+    result.className = "result error show";
+    resultInner.innerHTML = "<div class=\"result-label\">حقول مطلوبة</div><div class=\"error-detail\">يرجى تعبئة الاسم والجوال والعنوان</div>";
+    return;
   }
+  if (!/^05\d{8}$/.test(phone.replace(/\s/g,""))) {
+    document.getElementById("phone").classList.add("invalid");
+    result.className = "result error show";
+    resultInner.innerHTML = "<div class=\"result-label\">رقم غير صحيح</div><div class=\"error-detail\">رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام</div>";
+    return;
+  }
+  btn.disabled = true;
+  btnText.innerHTML = "<span class=\"spinner\"></span> جاري الإرسال لأرامكس";
+  result.className = "result";
+  const fullAddress = shortAddr ? address + " - " + shortAddr : address;
+  try {
+    const response = await fetch(SERVER_URL + "/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipientName: name,
+        recipientPhone: formatPhone(phone),
+        recipientCity: city,
+        recipientAddress: fullAddress,
+        weight: weight,
+        orderRef: ref,
+        description: desc || "ملابس",
+        codAmount: cod
+      })
+    });
+    const data = await response.json();
+    if (data.success) {
+      result.className = "result success show";
+      resultInner.innerHTML = "<div class=\"result-label\">تم إنشاء البوليصة بنجاح</div>" +
+        "<div class=\"shipment-id\">" + data.id + "</div>" +
+        "<div class=\"shipment-meta\">" + name + " — " + city + (cod > 0 ? " — COD: " + cod + " ريال" : "") + "</div>" +
+        "<a href=\"" + data.label + "\" target=\"_blank\" class=\"print-link\">" +
+        "<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"6 9 6 2 18 2 18 9\"/><path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\"/><rect x=\"6\" y=\"14\" width=\"12\" height=\"8\"/></svg>" +
+        "طباعة البوليصة</a>";
+      shipHistory.unshift({ id: data.id, name: name, city: city, cod: cod, label: data.label, time: now() });
+      renderHistory();
+      clearForm();
+    } else {
+      const errMsg = Array.isArray(data.error) ? data.error.map(function(n){ return n.Message || n.Code || JSON.stringify(n); }).join(" | ") : JSON.stringify(data.error);
+      result.className = "result error show";
+      resultInner.innerHTML = "<div class=\"result-label\">خطأ من أرامكس</div><div class=\"error-detail\">" + (errMsg || "حدث خطأ غير متوقع") + "</div>";
+    }
+  } catch(e) {
+    result.className = "result error show";
+    resultInner.innerHTML = "<div class=\"result-label\">خطأ في الاتصال</div><div class=\"error-detail\">تعذر الوصول للسيرفر</div>";
+  }
+  btn.disabled = false;
+  btnText.textContent = "إنشاء البوليصة";
+}
+function clearForm() {
+  ["name","phone","address","shortAddr","ref","desc"].forEach(function(id){ document.getElementById(id).value = ""; });
+  document.getElementById("cod").value = "0";
+  document.getElementById("weight").value = "1";
+}
+function renderHistory() {
+  const section = document.getElementById("historySection");
+  const list = document.getElementById("historyList");
+  const count = document.getElementById("historyCount");
+  if (!shipHistory.length) { section.classList.remove("show"); return; }
+  section.classList.add("show");
+  count.textContent = shipHistory.length;
+  list.innerHTML = shipHistory.map(function(h) {
+    return "<div class=\"history-item\">" +
+      "<div><div class=\"h-id\">" + h.id + "</div>" +
+      "<div class=\"h-meta\">" + h.name + " — " + h.city + (h.cod > 0 ? " — COD: " + h.cod + " ريال" : "") + "</div>" +
+      "<div class=\"h-time\">" + h.time + "</div></div>" +
+      "<a href=\"" + h.label + "\" target=\"_blank\" class=\"h-print\">طباعة</a></div>";
+  }).join("");
+}
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !document.getElementById("submitBtn").disabled) createShipment();
+});
+document.querySelectorAll("input").forEach(function(inp) {
+  inp.addEventListener("input", function(){ inp.classList.remove("invalid"); });
+});
+(function() {
+  const script = document.createElement("script");
+  script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+  script.onload = function() {
+    const canvas = document.getElementById("bg-canvas");
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 5;
+    const geo = new THREE.BufferGeometry();
+    const count = 120;
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      pos[i*3] = (Math.random() - 0.5) * 22;
+      pos[i*3+1] = (Math.random() - 0.5) * 22;
+      pos[i*3+2] = (Math.random() - 0.5) * 10;
+    }
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    const mat = new THREE.PointsMaterial({ color: 0xb8965a, size: 0.05, transparent: true, opacity: 0.25, sizeAttenuation: true });
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
+    const ring1 = new THREE.Mesh(
+      new THREE.TorusGeometry(3.5, 0.007, 8, 80),
+      new THREE.MeshBasicMaterial({ color: 0xd4b07a, transparent: true, opacity: 0.07 })
+    );
+    ring1.rotation.x = Math.PI / 3;
+    scene.add(ring1);
+    const ring2 = new THREE.Mesh(
+      new THREE.TorusGeometry(6, 0.005, 8, 100),
+      new THREE.MeshBasicMaterial({ color: 0xb8965a, transparent: true, opacity: 0.04 })
+    );
+    ring2.rotation.x = -Math.PI / 4;
+    ring2.rotation.y = Math.PI / 6;
+    scene.add(ring2);
+    let mx = 0, my = 0;
+    document.addEventListener("mousemove", function(e) {
+      mx = (e.clientX / window.innerWidth - 0.5) * 0.3;
+      my = (e.clientY / window.innerHeight - 0.5) * 0.3;
+    });
+    let t = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      t += 0.004;
+      points.rotation.y = t * 0.04;
+      points.rotation.x = t * 0.015;
+      ring1.rotation.z = t * 0.025;
+      ring2.rotation.z = -t * 0.018;
+      camera.position.x += (mx - camera.position.x) * 0.03;
+      camera.position.y += (-my - camera.position.y) * 0.03;
+      renderer.render(scene, camera);
+    }
+    animate();
+    window.addEventListener("resize", function() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  };
+  document.head.appendChild(script);
+})();
 </script>
 </body>
 </html>
